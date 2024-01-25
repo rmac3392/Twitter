@@ -6,7 +6,8 @@ import App from './App.vue'
 
 const app  = createApp(App);
 
-app.mount('#app');
 app.use(mdiVue,{
     icons:mdijs
 })
+app.mount('#app');
+

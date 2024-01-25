@@ -9,8 +9,8 @@
       <Tr upper="Trending in Philippines" middle="SKYBET MOMENT OF TRUTH" lower="9,827 posts"/>
       <Tr upper="Trending in Philippines" middle="Quen" lower="7,823 posts"/>
       <Tr upper="Trending in Philippines" middle="BETHLON PPPresent TRIBULATIONS" lower="12.5K posts"/>
-      <Tr upper="Trending in Philippines" middle="SKYBET MOMENT OF TRUTH" lower="9,827 posts"/>
-      <Tr upper="Trending in Philippines" middle="Quen" lower="7,823 posts"/>
+      <Tr upper="Trending in Philippines" middle="#BelleAndSolemn" lower="28.2k posts"/>
+      <Tr upper="Trending in Philippines" middle="Actress Jisoo" lower="52k posts"/>
       <div class="text-[#0089f4] text-sm">Show more</div>
     </div>
     
