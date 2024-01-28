@@ -8,6 +8,5 @@
   </div>
 </template>
 <script setup>
-import { HomeIcon } from "@heroicons/vue/24/solid";
 const { name,icon } = defineProps(["name", "icon"  ]);
 </script>

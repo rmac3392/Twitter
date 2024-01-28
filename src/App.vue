@@ -35,8 +35,8 @@
               Post
             </div>
 
-            <div class="h-20"> </div>
-            <div class="flex h-12 ">
+            <div class="h-20"></div>
+            <div class="flex h-12">
               <div
                 class="w-[18%] rounded-full flex justify-center items-center"
               >
@@ -59,7 +59,85 @@
           </div>
         </div>
       </div>
-      <div class="w-[30%] border-x-2 border-[#0e1110]"></div>
+      <div class="w-[30%] border-x-2 border-[#0e1110]">
+        <div
+          class="w-full h-14 font-medium border-b-2 border-[#0e1110] pb-[0.10rem]"
+        >
+          <div class="flex h-[95%]">
+            <div
+              class="w-[45%] flex flex-col items-center justify-center text-white"
+            >
+              For you
+            </div>
+            <div
+              class="w-[45%] flex items-center justify-center text-[#6b6e75]"
+            >
+              Following
+            </div>
+            <div class="flex justify-center items-center w-[10%]">
+              <mdicon
+                name="cog-outline"
+                width="25"
+                height="25"
+                class="text-white"
+              />
+            </div>
+          </div>
+          <div class="w-full h-[5%] pl-[6.2rem]">
+            <div
+              class="border-b-[5px] border-[#0188f4] w-14 rounded-full"
+            ></div>
+          </div>
+        </div>
+        <div class="h-28 w-full border-b-2 border-[#0e1110]">
+          <div class="flex h-[50%] pt-2">
+            <div class="w-[13%] p-4">
+              <div
+                class="h-full rounded-full flex justify-center items-center"
+              >
+                <img src="../src/assets/ncl.jpg" class="rounded-full" alt="" />
+              </div>
+            </div>
+            <div class="w-[87%] text-xl font-medium text-[#54595d] flex items-center">
+              What is happening?!
+            </div>
+          </div>
+          <div class="flex h-[50%]">
+            <div class="w-[13%]"></div>
+            <div class="flex gap-3 w-[87%] items-center">
+              <div>
+                <mdicon name="image-outline" width="20" height="20" class="text-[#0188f4]" />
+              </div>
+              <div>
+                <!-- <mdicon name="file-gif-box" width="20" height="20" class="text-[#0188f4]" /> -->
+                <GifIcon class="w-[20px] h-[20px] text-[#0188f4] "/>
+              </div>
+              <div>
+                <mdicon name="format-list-checks-" width="20" height="20" class="text-[#0188f4]" />
+              </div>
+              <div>
+                <mdicon name="emoticon-outline" width="20" height="20" class="text-[#0188f4]" />
+              </div>
+              <div>
+                <mdicon name="invoice-clock-outline" width="20" height="20" class="text-[#0188f4]" />
+              </div>
+              <div>
+                <mdicon name="map-marker-outline" width="20" height="20" class="text-[#01447a]" />
+              </div>
+              <div class="w-[44%]"></div>
+              <btton
+              class="rounded-full bg-[#01447a] w-16  h-8 p-1 font-medium text-base  text-center text-[#71787f] cursor-pointer "  disabled
+            >
+              Post
+            </btton>
+            </div>
+          </div>
+        </div>
+        <Post/>
+        <Post/>
+        <Post/>
+      </div>
+      
       <div class="w-[35%] flex">
         <div class="w-[65%] pl-8 pr-8">
           <div class="w-full space-y-4">
@@ -82,5 +160,7 @@ import Trend from "../src/components/Trend.vue";
 import Who from "../src/components/Who.vue";
 import Home from "../src/components/Home.vue";
 import Tab from "./components/Tab.vue";
+import Post from "./components/Post.vue";
 import { EllipsisHorizontalIcon } from "@heroicons/vue/24/solid";
+import { GifIcon } from '@heroicons/vue/24/outline';
 </script>
