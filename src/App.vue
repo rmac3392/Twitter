@@ -92,52 +92,89 @@
         <div class="h-28 w-full border-b-2 border-[#0e1110]">
           <div class="flex h-[50%] pt-2">
             <div class="w-[13%] p-4">
-              <div
-                class="h-full rounded-full flex justify-center items-center"
-              >
+              <div class="h-full rounded-full flex justify-center items-center">
                 <img src="../src/assets/ncl.jpg" class="rounded-full" alt="" />
               </div>
             </div>
-            <div class="w-[87%] text-xl font-medium text-[#54595d] flex items-center">
-              What is happening?!
+            <div
+              class="w-[87%] text-xl font-medium text-[#54595d] flex items-center"
+            >
+              <textarea
+                v-model="text"
+                class="bg-[#000000] outline-none text-white w-full overflow-hidden text-lg leading-5 whitespace-normal overflow-wrap-normal"
+                rows="2"
+                type="text"
+                placeholder="What is happening?!"
+              ></textarea>
             </div>
           </div>
           <div class="flex h-[50%]">
             <div class="w-[13%]"></div>
             <div class="flex gap-3 w-[87%] items-center">
               <div>
-                <mdicon name="image-outline" width="20" height="20" class="text-[#0188f4]" />
+                <mdicon
+                  name="image-outline"
+                  width="20"
+                  height="20"
+                  class="text-[#0188f4]"
+                />
               </div>
               <div>
                 <!-- <mdicon name="file-gif-box" width="20" height="20" class="text-[#0188f4]" /> -->
-                <GifIcon class="w-[20px] h-[20px] text-[#0188f4] "/>
+                <GifIcon class="w-[20px] h-[20px] text-[#0188f4]" />
               </div>
               <div>
-                <mdicon name="format-list-checks-" width="20" height="20" class="text-[#0188f4]" />
+                <mdicon
+                  name="format-list-checks-"
+                  width="20"
+                  height="20"
+                  class="text-[#0188f4]"
+                />
               </div>
               <div>
-                <mdicon name="emoticon-outline" width="20" height="20" class="text-[#0188f4]" />
+                <mdicon
+                  name="emoticon-outline"
+                  width="20"
+                  height="20"
+                  class="text-[#0188f4]"
+                />
               </div>
               <div>
-                <mdicon name="invoice-clock-outline" width="20" height="20" class="text-[#0188f4]" />
+                <mdicon
+                  name="invoice-clock-outline"
+                  width="20"
+                  height="20"
+                  class="text-[#0188f4]"
+                />
               </div>
               <div>
-                <mdicon name="map-marker-outline" width="20" height="20" class="text-[#01447a]" />
+                <mdicon
+                  name="map-marker-outline"
+                  width="20"
+                  height="20"
+                  class="text-[#01447a]"
+                />
               </div>
               <div class="w-[44%]"></div>
-              <btton
-              class="rounded-full bg-[#01447a] w-16  h-8 p-1 font-medium text-base  text-center text-[#71787f] cursor-pointer "  disabled
-            >
-              Post
-            </btton>
+              <button
+                class="rounded-full bg-[#0188f4] text-white w-16 h-8 p-1 font-medium text-base text-center cursor-pointer"
+                @click="predictText"
+              >
+                Post
+              </button>
             </div>
           </div>
         </div>
-        <Post/>
-        <Post/>
-        <Post/>
+        <div class="text-white"v-if="result">
+          Prediction: {{ result.prediction }} <br />
+          Probability:
+          {{ result.probability.toFixed(2) }}%
+        </div>
+        <Post />
+        <Post />
+        <Post />
       </div>
-      
+
       <div class="w-[35%] flex">
         <div class="w-[65%] pl-8 pr-8">
           <div class="w-full space-y-4">
@@ -162,5 +199,22 @@ import Home from "../src/components/Home.vue";
 import Tab from "./components/Tab.vue";
 import Post from "./components/Post.vue";
 import { EllipsisHorizontalIcon } from "@heroicons/vue/24/solid";
-import { GifIcon } from '@heroicons/vue/24/outline';
+import { GifIcon } from "@heroicons/vue/24/outline";
+
+import axios from "axios";
+import { ref } from "vue";
+
+const text = ref("");
+const result = ref(null);
+
+const predictText = async () => {
+  try {
+    const response = await axios.post("http://localhost:5000/predict", {
+      text: text.value,
+    });
+    result.value = response.data;
+  } catch (error) {
+    console.error("Error: ", error);
+  }
+};
 </script>
