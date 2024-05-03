@@ -25,15 +25,17 @@
         </div>
       </div>
       <div class="h-auto text-white mb-3">
-        DepEd defined administrative tasks as work “related to the effective and
-        efficient operations of schools or programs, projects, and services
-        which are not directly related to teaching and academic
-        learning.”#CDNDigital Read: https://inqnews.net/KJ1Zj6
+        {{ props.post }}
       </div>
       <div class="h-auto ">
-        <img src="../assets/news.jpeg" alt="" class="rounded-3xl border-2 border-[#0e1110]" />
+        <!-- <img src="../assets/news.jpeg" alt="" class="rounded-3xl border-2 border-[#0e1110]" /> -->
       </div>
     </div>
   </div>
 </template>
-<script setup></script>
+<script setup>
+import { ref } from 'vue';
+import { defineProps } from 'vue';
+const props = defineProps(['post']);
+
+</script>

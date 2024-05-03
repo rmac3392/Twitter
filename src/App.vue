@@ -158,22 +158,40 @@
               <div class="w-[44%]"></div>
               <button
                 class="rounded-full bg-[#0188f4] text-white w-16 h-8 p-1 font-medium text-base text-center cursor-pointer"
-                @click="predictText"
+                @click="postText"
               >
                 Post
               </button>
             </div>
           </div>
         </div>
-        <div class="text-white"v-if="result">
-          Prediction: {{ result.prediction }} <br />
-          Probability:
-          {{ result.probability.toFixed(2) }}%
+        <!-- This code below are for identifying if the tweet is emergency or not -->
+        <div class="pl-3 pt-2">
+          <div class="text-white" v-if="result">
+            isEmergency: {{ result.emergency }} <br />
+            Probability:
+            {{ result.emergency_probability.toFixed(2) }}%
+          </div>
+          <div class="text-white" v-if="result">
+            Emergency Type: {{ result.type }} <br />
+            Probabilities:
+            <ul>
+              <li v-for="(value, key) in result.type_probabilities" :key="key">
+                {{ key }}: {{ value.toFixed(2) }}%
+              </li>
+            </ul>
+          </div>
         </div>
-        <Post />
-        <Post />
-        <Post />
+
+        <div v-for="(post, index) in posts.slice().reverse()" :key="index">
+          <Post :post="post.content" />
+        </div>
       </div>
+
+      <!-- DepEd defined administrative tasks as work “related to the effective and
+        efficient operations of schools or programs, projects, and services
+        which are not directly related to teaching and academic
+        learning.”#CDNDigital Read: https://inqnews.net/KJ1Zj6 -->
 
       <div class="w-[35%] flex">
         <div class="w-[65%] pl-8 pr-8">
@@ -206,15 +224,55 @@ import { ref } from "vue";
 
 const text = ref("");
 const result = ref(null);
+const posts = ref([]);
+const currentDateTime = ref(new Date());
 
-const predictText = async () => {
+const postText = async () => {
   try {
-    const response = await axios.post("http://localhost:5000/predict", {
+    updateDateTime();
+    const serverResponse = await axios.post("http://localhost:5000/predict", {
       text: text.value,
     });
-    result.value = response.data;
+    result.value = serverResponse.data;
+
+
+    if(result.value.emergency){
+      post(text.value, result.value.type); 
+    console.log(
+      "Data sent to flask backend",
+      text.value,
+      result.value.emergency,
+      result.value.type,
+      currentDateTime.value.toLocaleString()
+    );
+    }
+    
+    
+    const newPost = {
+      content: text.value,
+    };
+    posts.value.push(newPost);
+    text.value = "";
   } catch (error) {
     console.error("Error: ", error);
   }
 };
+
+const post = async (description, type) => {
+  const formData = new FormData();
+  formData.append("description", description);
+  formData.append("emergency_type", type);
+  formData.append("city", "Lapu-Lapu");
+  formData.append("zipcode", "6015");
+  formData.append("address", "Masiwa");
+  await axios.post("http://172.16.30.85:8081/addPost", formData, {
+    headers: {
+      "Content-type": "multipart/form-data",
+    },
+  });
+};
+const updateDateTime = () => {
+  currentDateTime.value = new Date();
+};
+
 </script>
