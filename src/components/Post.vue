@@ -3,7 +3,7 @@
     <div class="w-[11%] ">
       <div class="h-12 rounded-full  flex justify-start items-center">
         <!-- profile -->
-        <img src="../assets/ncl.jpg" class="rounded-full h-11 " alt="" />
+        <img src="../assets/pp.jpg" class="rounded-full h-11 " alt="" />
       </div>
 
       <!--  -->
