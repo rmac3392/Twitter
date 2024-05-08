@@ -16,6 +16,7 @@
     "chart.js": "^4.4.2",
     "mdi-vue": "^3.0.13",
     "pinia": "^2.1.7",
+    "string-similarity": "^4.0.4",
     "vue": "^3.3.11",
     "vue-chartjs": "^5.3.1",
     "vue-router": "^4.3.2"

@@ -216,6 +216,7 @@ import Who from "../components/Who.vue";
 import Home from "../components/Home.vue";
 import Tab from "../components/Tab.vue";
 import Post from "../components/Post.vue";
+import stringSimilarity from "string-similarity";
 import { EllipsisHorizontalIcon } from "@heroicons/vue/24/solid";
 import { GifIcon } from "@heroicons/vue/24/outline";
 
@@ -226,6 +227,7 @@ const text = ref("");
 const result = ref(null);
 const posts = ref([]);
 const currentDateTime = ref(new Date());
+const locations = ref([]);
 
 const postText = async () => {
   try {
@@ -256,20 +258,92 @@ const postText = async () => {
   }
 };
 
-const post = async (description, type) => {
-  const formData = new FormData();
-  formData.append("description", description);
-  formData.append("emergency_type", type);
-  formData.append("city", "Lapu-Lapu");
-  formData.append("zipcode", "6015");
-  formData.append("address", "Masiwa");
-  await axios.post("http://localhost:8080/addPost", formData, {
-    headers: {
-      "Content-type": "multipart/form-data",
-    },
-  });
-};
+// const post = async (description, type) => {
+//   const formData = new FormData();
+//   formData.append("description", description);
+//   formData.append("emergency_type", type);
+//   formData.append("city", "Lapu-Lapu");
+//   formData.append("zipcode", "6015");
+//   formData.append("address", "Masiwa");
+//   await axios.post("http://localhost:8080/addPost", formData, {
+//     headers: {
+//       "Content-type": "multipart/form-data",
+//     },
+//   });
+// };
 const updateDateTime = () => {
   currentDateTime.value = new Date();
+};
+
+const post = async (description, type) => {
+  try {
+    const formData = new FormData();
+    formData.append("description", description);
+    formData.append("emergency_type", type);
+    formData.append("city", await location_city(detectLocation(description)));
+    formData.append(
+      "zipcode",
+      await location_zipcode(detectLocation(description))
+    );
+    formData.append("address", detectLocation(description));
+
+    const response = await axios.post(
+      "http://localhost:8080/addPost",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+  } catch (error) {
+    console.error("Error uploading image:", error.message || "Unknown error");
+  }
+};
+
+const getLocations = async () => {
+  const response = await fetch("http://localhost:8080/getLocation");
+  const data = await response.json();
+  for (var i = 0; i < data.length; i++) {
+    locations.value.push(data[i].name);
+  }
+};
+getLocations();
+
+const detectLocation = (text) => {
+  const sentence = text.toLowerCase().replace(/\s+/g, "");
+  const matchedLocation = locations.value.find((location) =>
+    sentence.includes(location)
+  );
+
+  if (matchedLocation) {
+    return matchedLocation;
+  } else {
+    const similarities = locations.value.map((location) =>
+      stringSimilarity.compareTwoStrings(sentence, location)
+    );
+    const maxSimilarityIndex = similarities.indexOf(Math.max(...similarities));
+    return maxSimilarityIndex !== -1 ? locations.value[maxSimilarityIndex] : "";
+  }
+};
+
+const location_city = async (detectedLocation) => {
+  const response = await fetch("http://localhost:8080/getLocation");
+  const data = await response.json();
+  for (var i = 0; i < data.length; i++) {
+    if (detectedLocation == data[i].name) {
+      return data[i].location;
+    }
+  }
+};
+
+const location_zipcode = async (detectedLocation) => {
+  const response = await fetch("http://localhost:8080/getLocation");
+  const data = await response.json();
+  for (var i = 0; i < data.length; i++) {
+    if (detectedLocation == data[i].name) {
+      return data[i].zipcode;
+    }
+  }
 };
 </script>
