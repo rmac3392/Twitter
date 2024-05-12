@@ -1,16 +1,31 @@
 <template>
   <div>
-    <canvas width="500" height="500" ref="chartCanvas" ></canvas>
+    <canvas width="500" height="500" ref="chartCanvas"></canvas>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 import { Chart, registerables } from "chart.js";
 Chart.register(...registerables);
 
+const props = defineProps({
+  data: Object,
+});
+
 const chartCanvas = ref(null);
 let myChart;
+
+watch(
+  () => props.data,
+  () => {
+    if (!myChart) return;
+    const data = props.data.type_probabilities;
+    const keys = Object.keys(data);
+    myChart.data.datasets[0].data = keys.map((key) => data[key]);
+    myChart.update();
+  }
+);
 
 onMounted(() => {
   if (chartCanvas.value) {
@@ -18,7 +33,7 @@ onMounted(() => {
     myChart = new Chart(ctx, {
       type: "bar",
       data: {
-        labels: ["Assault", "Biohazard", "Fire", "Injuries", "Other", "Flood"],
+        labels: ["Assault", "Biohazard", "Fire", "Flood", "Injuries", "Other"],
         datasets: [
           {
             label: "Change (%)",
@@ -46,7 +61,6 @@ onMounted(() => {
         ],
       },
       options: {
-        
         scales: {
           x: {
             ticks: {
@@ -66,13 +80,12 @@ onMounted(() => {
                   ) + "%"
                 );
               },
-              
+
               color: "white", // Set tick color to white
             },
             grid: {
               color: "#ffffff", // Set grid color to white with transparency
             },
-            
           },
         },
         plugins: {

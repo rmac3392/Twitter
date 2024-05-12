@@ -230,33 +230,54 @@ const currentDateTime = ref(new Date());
 const locations = ref([]);
 
 const postText = async () => {
-  try {
-    updateDateTime();
-    const serverResponse = await axios.post("http://localhost:5000/predict", {
-      text: text.value,
-    });
-    result.value = serverResponse.data;
+try {
+  updateDateTime();
+  let modifiedText = text.value.replace(/sunog/gi, "wildfire")
+                                .replace(/bombero/gi, "firefighters")
 
-    if (result.value.emergency) {
-      post(text.value, result.value.type);
-      console.log(
-        "Data sent to flask backend",
-        text.value,
-        result.value.emergency,
-        result.value.type,
-        currentDateTime.value.toLocaleString()
-      );
+                                .replace(/dunggab/gi, "violent stabbing police")
+                                .replace(/kulata/gi, "violent stabbing police")
+
+
+                                .replace(/nabali/gi, "accident")
+                                .replace(/disgrasya/gi, "accident")
+                                .replace(/bangga/gi, "accident")
+
+
+                                ;
+
+  const serverResponse = await axios.post("http://localhost:5000/predict", {
+    text: modifiedText,
+  });
+  result.value = serverResponse.data;
+  result.value.text = text.value;
+  localStorage.setItem('prediction', JSON.stringify(result.value));
+  
+  if (result.value.emergency) {
+    let finalType = result.value.type
+    if(result.value.type=='Other'){
+      finalType = 'Others'
     }
-
-    const newPost = {
-      content: text.value,
-    };
-    posts.value.push(newPost);
-    text.value = "";
-  } catch (error) {
-    console.error("Error: ", error);
+    post(text.value, finalType);
+    console.log(
+      "Data sent to flask backend",
+      modifiedText,
+      result.value.emergency,
+      result.value.type,
+      currentDateTime.value.toLocaleString()
+    );
   }
+
+  const newPost = {
+    content: text.value,
+  };
+  posts.value.push(newPost);
+  text.value = "";
+} catch (error) {
+  console.error("Error: ", error);
+}
 };
+
 
 // const post = async (description, type) => {
 //   const formData = new FormData();
@@ -265,7 +286,7 @@ const postText = async () => {
 //   formData.append("city", "Lapu-Lapu");
 //   formData.append("zipcode", "6015");
 //   formData.append("address", "Masiwa");
-//   await axios.post("http://localhost:8080/addPost", formData, {
+//   await axios.post("http://192.168.161.142:8080/addPost", formData, {
 //     headers: {
 //       "Content-type": "multipart/form-data",
 //     },
@@ -288,7 +309,7 @@ const post = async (description, type) => {
     formData.append("address", detectLocation(description));
 
     const response = await axios.post(
-      "http://localhost:8080/addPost",
+      "http://192.168.161.142:8080/addPost",
       formData,
       {
         headers: {
@@ -302,7 +323,7 @@ const post = async (description, type) => {
 };
 
 const getLocations = async () => {
-  const response = await fetch("http://localhost:8080/getLocation");
+  const response = await fetch("http://192.168.161.142:8080/getLocation");
   const data = await response.json();
   for (var i = 0; i < data.length; i++) {
     locations.value.push(data[i].name);
@@ -328,7 +349,7 @@ const detectLocation = (text) => {
 };
 
 const location_city = async (detectedLocation) => {
-  const response = await fetch("http://localhost:8080/getLocation");
+  const response = await fetch("http://192.168.161.142:8080/getLocation");
   const data = await response.json();
   for (var i = 0; i < data.length; i++) {
     if (detectedLocation == data[i].name) {
@@ -338,7 +359,7 @@ const location_city = async (detectedLocation) => {
 };
 
 const location_zipcode = async (detectedLocation) => {
-  const response = await fetch("http://localhost:8080/getLocation");
+  const response = await fetch("http://192.168.161.142:8080/getLocation");
   const data = await response.json();
   for (var i = 0; i < data.length; i++) {
     if (detectedLocation == data[i].name) {
